@@ -59,19 +59,24 @@ _GOOGLE_TAG_PREFIXES: tuple[str, ...] = ("__cvt_",)
 # but they do not send network requests — they register DOM event
 # handlers that, in turn, fire other tags. Counting them as consent
 # violations would be a false positive.
+#
+# ``__paused`` is also excluded: GTM replaces a paused tag's function
+# code with ``__paused`` so the runtime skips it. A paused tag cannot
+# fire and therefore cannot violate consent.
 GTM_BUILTIN_LISTENERS: frozenset[str] = frozenset(
     {
-        "__cl",    # Click listener
-        "__ccl",   # Core click listener
-        "__lcl",   # Link click listener
-        "__fsl",   # Form submit listener
-        "__hl",    # History change listener
-        "__sdl",   # Scroll depth listener
-        "__ytl",   # YouTube video listener
-        "__evl",   # Element visibility listener
-        "__tl",    # Timer listener
-        "__jel",   # JavaScript error listener
-        "__tpm",   # Tag pause metric
+        "__cl",      # Click listener
+        "__ccl",     # Core click listener
+        "__lcl",     # Link click listener
+        "__fsl",     # Form submit listener
+        "__hl",      # History change listener
+        "__sdl",     # Scroll depth listener
+        "__ytl",     # YouTube video listener
+        "__evl",     # Element visibility listener
+        "__tl",      # Timer listener
+        "__jel",     # JavaScript error listener
+        "__tpm",     # Tag pause metric
+        "__paused",  # Paused tag — does not fire
     }
 )
 

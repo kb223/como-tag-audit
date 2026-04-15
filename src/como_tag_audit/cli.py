@@ -14,6 +14,7 @@ from como_tag_audit import __version__
 from como_tag_audit.audit import audit_gtm_id, audit_js, audit_url
 from como_tag_audit.fetcher import FetchError
 from como_tag_audit.models import AuditResult, Verdict
+from como_tag_audit.reporters import render_csv, render_deck
 
 _VERDICT_STYLE = {
     Verdict.OK: "green",
@@ -79,6 +80,34 @@ def _render_rich(result: AuditResult, console: Console) -> None:
         )
 
 
+def _write_report_bundle(result: AuditResult, out_dir: Path, console: Console) -> None:
+    """Write report.md (Marp deck), report.csv, report.json into ``out_dir``."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    deck_path = out_dir / "report.md"
+    csv_path = out_dir / "report.csv"
+    json_path = out_dir / "report.json"
+    deck_path.write_text(render_deck(result), encoding="utf-8")
+    csv_path.write_text(render_csv(result), encoding="utf-8")
+    json_path.write_text(result.to_json(), encoding="utf-8")
+
+    s = result.summary
+    console.print(
+        Panel(
+            f"[bold]Report bundle written to[/bold] [cyan]{out_dir}[/cyan]\n\n"
+            f"  [green]report.md[/green]    Marp deck ({deck_path.stat().st_size // 1024} KB)\n"
+            f"  [green]report.csv[/green]   Per-tag inventory ({len(result.tags)} rows)\n"
+            f"  [green]report.json[/green]  Raw audit data\n\n"
+            f"[bold]Render the deck:[/bold]\n"
+            f"  [cyan]npx @marp-team/marp-cli {deck_path} --html --pdf --allow-local-files[/cyan]\n"
+            f"  [cyan]npx @marp-team/marp-cli {deck_path} --html --images png --allow-local-files[/cyan]\n\n"
+            f"[dim]{s.total_tags} tags · {s.violations} violations · "
+            f"CMP: {s.cmp_detected or 'unknown'} · GTM: {s.gtm_id or 'none'}[/dim]",
+            border_style="blue",
+            title="como-tag-audit",
+        )
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="como-tag-audit",
@@ -96,6 +125,15 @@ def build_parser() -> argparse.ArgumentParser:
     out = p.add_mutually_exclusive_group()
     out.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
     out.add_argument("--md", action="store_true", help="Emit a Markdown report")
+    out.add_argument(
+        "--report",
+        metavar="DIR",
+        type=Path,
+        help=(
+            "Write a report bundle to DIR: report.md (Marp deck), "
+            "report.csv (per-tag inventory), report.json (raw data)."
+        ),
+    )
 
     p.add_argument("--timeout", type=float, default=15.0, help="HTTP timeout seconds")
     p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
@@ -123,6 +161,8 @@ def main(argv: list[str] | None = None) -> int:
         print(result.to_json())
     elif args.md:
         print(result.to_markdown())
+    elif args.report:
+        _write_report_bundle(result, args.report, console)
     else:
         _render_rich(result, console)
 
