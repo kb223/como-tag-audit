@@ -42,7 +42,7 @@ como-tag-audit = "como_tag_audit.cli:main"
 [project.urls]
 Homepage = "https://github.com/kb223/como-tag-audit"
 Issues = "https://github.com/kb223/como-tag-audit/issues"
-"Full Audit" = "https://consent-api.roseskyconsulting.com"
+"Full Audit" = "https://kennethjbuchanan.com/audit#get-audit"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/como_tag_audit"]

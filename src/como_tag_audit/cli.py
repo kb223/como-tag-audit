@@ -73,7 +73,7 @@ def _render_rich(result: AuditResult, console: Console) -> None:
                 "Static analysis only shows misconfiguration. To see what actually "
                 "fires after a user denies consent — including network requests, "
                 "cookies set, and legal exposure — run a live audit at\n"
-                "[link]https://consent-api.roseskyconsulting.com[/link]",
+                "[link]https://kennethjbuchanan.com/audit#get-audit[/link]",
                 border_style="red",
             )
         )

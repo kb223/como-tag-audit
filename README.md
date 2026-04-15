@@ -14,7 +14,7 @@ Most teams don't. Most teams don't realize they don't.
 
 This tool reads the raw `gtm.js` container off the wire and tells you, per tag, whether it will fire regardless of consent. Ten seconds, no browser install, no account.
 
-It's the static half of a forensic audit. The live half — what *actually* fires after a user denies consent, which cookies are set, which vendors are hit, and what the legal exposure is — lives in the [full RSC audit](https://consent-api.roseskyconsulting.com).
+It's the static half of a forensic audit. The live half — what *actually* fires after a user denies consent, which cookies are set, which vendors are hit, and what the legal exposure is — lives in the [full RSC audit](https://kennethjbuchanan.com/audit#get-audit).
 
 ## Install
 
@@ -88,7 +88,7 @@ This is a static analysis tool. It cannot tell you:
 - Post-denial pixel firing (the CIPA §631 exposure angle)
 - Legal exposure grading against CPRA, CIPA, VCDPA, GDPR, etc.
 
-If you need any of that, run a [full live audit](https://consent-api.roseskyconsulting.com).
+If you need any of that, run a [full live audit](https://kennethjbuchanan.com/audit#get-audit).
 
 ## How it works
 
@@ -119,7 +119,7 @@ mypy src
 
 ## Credit
 
-The parser logic is extracted from the GTM tool in the [RSC consent-compliance-agent](https://consent-api.roseskyconsulting.com) — a forensic audit pipeline used for enterprise privacy-lawsuit defense work. This open-source package is the piece every team should be able to run for free.
+The parser logic is extracted from the GTM tool in the [RSC consent-compliance-agent](https://kennethjbuchanan.com/audit#get-audit) — a forensic audit pipeline used for enterprise privacy-lawsuit defense work. This open-source package is the piece every team should be able to run for free.
 
 ## License
 
